@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=.8">
-    <title>محاكي كأس العالم 2026 - احتساب تلقائي ذكي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <title>محاكي كأس العالم 2026 - التوزيع الرسمي الصحيح</title>
     <style>
         :root {
             --primary-color: #1a73e8;
@@ -12,6 +12,8 @@
             --card-bg: #ffffff;
             --text-muted: #70757a;
             --bracket-bg: #f1f3f4;
+            --success-color: #1e8e3e;
+            --danger-color: #d93025;
         }
 
         body {
@@ -27,7 +29,7 @@
 
         .container {
             width: 100%;
-            max-width: 950px;
+            max-width: 1000px;
             background: var(--card-bg);
             padding: 20px;
             border-radius: 8px;
@@ -35,12 +37,15 @@
             margin-bottom: 25px;
         }
 
-        h1, h2 {
+        h1, h2, h3 {
             text-align: center;
             color: #202124;
-            font-size: 1.5rem;
             margin-bottom: 5px;
         }
+
+        h1 { font-size: 1.6rem; }
+        h2 { font-size: 1.4rem; margin-top: 20px; }
+        h3 { font-size: 1.1rem; background: #e8f0fe; padding: 6px; border-radius: 4px; color: var(--primary-color); }
 
         .subtitle {
             text-align: center;
@@ -60,8 +65,8 @@
         }
 
         select {
-            padding: 8px 12px;
-            font-size: 0.95rem;
+            padding: 6px 10px;
+            font-size: 0.9rem;
             border-radius: 4px;
             border: 1px solid var(--border-color);
             outline: none;
@@ -70,7 +75,7 @@
         }
 
         .btn-reset {
-            background-color: #d93025;
+            background-color: var(--danger-color);
             color: white;
             border: none;
             padding: 8px 14px;
@@ -80,33 +85,63 @@
             font-weight: 500;
         }
 
-        .btn-reset:hover {
-            background-color: #b31412;
-        }
+        .btn-reset:hover { background-color: #b31412; }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: center;
             font-size: 0.9rem;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
         }
 
         th, td {
-            padding: 10px 6px;
+            padding: 8px 5px;
             border-bottom: 1px solid var(--border-color);
         }
 
         th {
-            color: var(--text-muted);
-            font-weight: normal;
-            font-size: 0.85rem;
+            background-color: #f1f3f4;
+            color: #202124;
+            font-weight: bold;
         }
 
         .th-team, .td-team {
             text-align: right;
             padding-right: 15px;
             width: 25%;
+        }
+
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .match-card {
+            background: #fdfdfd;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .match-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .match-round-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 3px;
+            margin-bottom: 4px;
+            font-weight: bold;
         }
 
         input[type="number"] {
@@ -118,7 +153,6 @@
             font-size: 0.9rem;
         }
 
-        /* تمييز الخانات المحسوبة تلقائياً بلون مختلف وقفل التعديل عليها */
         input[readonly] {
             background-color: #f1f3f4;
             border-color: transparent;
@@ -132,8 +166,9 @@
             font-size: 0.95rem;
         }
 
-        tr.qualified { border-right: 4px solid #1e8e3e; }
-        tr.eliminated { border-right: 4px solid #d93025; }
+        tr.qualified { border-right: 4px solid var(--success-color); }
+        tr.qualified-third { border-right: 4px solid #fbbc05; }
+        tr.eliminated { border-right: 4px solid var(--danger-color); }
 
         .fw-bold { font-weight: bold; color: #202124; }
 
@@ -143,7 +178,7 @@
             border-radius: 4px;
             font-weight: 500;
             display: inline-block;
-            min-width: 120px;
+            min-width: 140px;
             text-align: center;
         }
 
@@ -153,7 +188,7 @@
             color: #000;
             padding: 15px;
             border-radius: 8px;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: bold;
             margin-top: 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -164,30 +199,34 @@
 
 <div class="container">
     <h1 id="group-title">المجموعة A</h1>
-    <p class="subtitle">أدخل فقط (ف، ت، خ، له، عليه) وسيتم احتساب (لعب، فارق، نقاط) وترتيب المجموعة تلقائياً!</p>
+    <p class="subtitle">تم تصحيح الشجرة لتتوافق مع معايير الفيفا الرسمية لكأس العالم 2026.</p>
     
     <div class="selector-container">
         <select id="group-select" onchange="changeGroup()">
-            <option value="A">المجموعة A (المكسيك، كوريا س، جنوب إفريقيا، التشيك)</option>
-            <option value="B">المجموعة B (كندا، البوسنة، قطر، سويسرا)</option>
-            <option value="C">المجموعة C (البرازيل، المغرب، هايتي، إسكتلندا)</option>
-            <option value="D">المجموعة D (أمريكا، باراغواي، أستراليا، تركيا)</option>
-            <option value="E">المجموعة E (ألمانيا، كوت ديفوار، الإكوادور، كوراساو)</option>
-            <option value="F">المجموعة F (هولندا، اليابان، السويد، تونس)</option>
-            <option value="G">المجموعة G (بلجيكا، مصر، إيران، نيوزيلندا)</option>
-            <option value="H">المجموعة H (إسبانيا، أوروغواي، السعودية، الرأس الأخضر)</option>
-            <option value="I">المجموعة I (فرنسا، السنغال، النرويج، العراق)</option>
-            <option value="J">المجموعة J (الأرجنتين، الجزائر، النمسا، الأردن)</option>
-            <option value="K">المجموعة K (البرتغال، كولومبيا، أوزبكستان، الكونغو د)</option>
-            <option value="L">المجموعة L (إنجلترا، كرواتيا، غانا، بنما)</option>
+            <option value="A">المجموعة A</option>
+            <option value="B">المجموعة B</option>
+            <option value="C">المجموعة C</option>
+            <option value="D">المجموعة D</option>
+            <option value="E">المجموعة E</option>
+            <option value="F">المجموعة F</option>
+            <option value="G">المجموعة G</option>
+            <option value="H">المجموعة H</option>
+            <option value="I">المجموعة I</option>
+            <option value="J">المجموعة J</option>
+            <option value="K">المجموعة K</option>
+            <option value="L">المجموعة L</option>
         </select>
         <button class="btn-reset" onclick="resetAllData()">🔄 إعادة تصفير المحاكي بالكامل</button>
     </div>
+
+    <h3>🗓️ مباريات المجموعة</h3>
+    <div class="matches-grid" id="group-matches-container"></div>
     
+    <h3>📊 جدول ترتيب المجموعة الحالي</h3>
     <table>
         <thead>
             <tr>
-                <th style="width: 5%;"></th>
+                <th style="width: 5%;">#</th>
                 <th class="th-team">الفريق</th>
                 <th>لعب</th>
                 <th>ف</th>
@@ -201,11 +240,29 @@
         </thead>
         <tbody id="table-body"></tbody>
     </table>
+
+    <h3>🏅 جدول أفضل الثوالث (للاستخدام اليدوي بالأسفل)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 5%;">#</th>
+                <th class="th-team">الفريق (المجموعة)</th>
+                <th>لعب</th>
+                <th>ف</th>
+                <th>ت</th>
+                <th>خ</th>
+                <th>له</th>
+                <th>عليه</th>
+                <th>فارق</th>
+                <th class="fw-bold">نقاط</th>
+            </tr>
+        </thead>
+        <tbody id="thirds-table-body"></tbody>
+    </table>
 </div>
 
 <div class="container">
-    <h2>🏆 شجرة الأدوار الإقصائية (حساب تلقائي للفائزين)</h2>
-    <p class="subtitle">أدخل أهداف المباريات وسيقوم النظام بنقل الفائز للدور التالي مباشرة</p>
+    <h2>🏆 شجرة الأدوار الإقصائية (المحدثة رسمياً)</h2>
 
     <h3>1️⃣ دور الـ 32</h3>
     <table id="ko-32-table">
@@ -243,230 +300,305 @@
 </div>
 
 <script>
-    const defaultData = {
-        "A": [ { name: "🇲🇽 المكسيك", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇰🇷 كوريا الجنوبية", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇨🇿 التشيك", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇿🇦 جنوب إفريقيا", w: "", d: "", l: "", gf: "", ga: "" } ],
-        "B": [ { name: "🇨🇭 سويسرا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇨🇦 كندا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇶🇦 قطر", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇧🇦 البوسنة والهرسك", w: "", d: "", l: "", gf: "", ga: "" } ],
-        "C": [ { name: "🏴󠁧󠁢󠁳كتلندا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇲🇦 المغرب", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇧🇷 البرازيل", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇭🇹 هايتي", w: "", d: "", l: "", gf: "", ga: "" } ],
-        "D": [ { name: "🇺🇸 الولايات المتحدة", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇵🇾 باراغواي", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇦🇺 أستراليا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇹🇷 تركيا", w: "", d: "", l: "", gf: "", ga: "" } ],
-        "E": [ { name: "🇩🇪 ألمانيا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇨🇮 كوت ديفوار", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇪🇨 الإكوادور", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇨🇼 كوراساو", w: "", d: "", l: "", gf: "", ga: "" } ],
-        "F": [ { name: "🇳🇱 هولندا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇯🇵 اليابان", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇸🇪 السويد", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇹🇳 تونس", w: "", d: "", l: "", gf: "", ga: "" } ],
-        "G": [ { name: "🇧🇪 بلجيكا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇪🇬 مصر", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇮🇷 إيران", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇳🇿 نيوزيلندا", w: "", d: "", l: "", gf: "", ga: "" } ],
-        "H": [ { name: "🇪🇸 إسبانيا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇺🇾 أوروغواي", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇸🇦 السعودية", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇨🇻 الرأس الأخضر", w: "", d: "", l: "", gf: "", ga: "" } ],
-        "I": [ { name: "🇫🇷 فرنسا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇸🇳 السنغال", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇳🇴 النرويج", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇮🇶 العراق", w: "", d: "", l: "", gf: "", ga: "" } ],
-        "J": [ { name: "🇦🇷 الأرجنتين", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇩🇿 الجزائر", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇦🇹 النمسا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇯🇴 الأردن", w: "", d: "", l: "", gf: "", ga: "" } ],
-        "K": [ { name: "🇵🇹 البرتغال", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇨🇴 كولومبيا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇺🇿 أوزبكستان", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇨🇩 جمهورية الكونغو", w: "", d: "", l: "", gf: "", ga: "" } ],
-        "L": [ { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 إنجلترا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇭🇷 كرواتيا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇬🇭 غانا", w: "", d: "", l: "", gf: "", ga: "" }, { name: "🇵🇦 بنما", w: "", d: "", l: "", gf: "", ga: "" } ]
+    const defaultTeams = {
+        "A": ["🇲🇽 المكسيك", "🇰🇷 كوريا الجنوبية", "🇨🇿 التشيك", "🇿🇦 جنوب إفريقيا"],
+        "B": ["🇨🇭 سويسرا", "🇨🇦 كندا", "🇶🇦 قطر", "🇧🇦 البوسنة والهرسك"],
+        "C": ["🇧🇷 البرازيل", "🇲🇦 المغرب", "🏴󠁧󠁢󠁳󠁣󠁴󠁿 سكوتلندا", "🇭🇹 هايتي"],
+        "D": ["🇺🇸 الولايات المتحدة", "🇵🇾 باراغواي", "🇦🇺 أستراليا", "🇹🇷 تركيا"],
+        "E": ["🇩🇪 ألمانيا", "🇨🇮 كوت ديفوار", "🇪🇨 الإكوادور", "🇨🇼 كوراساو"],
+        "F": ["🇳🇱 هولندا", "🇯🇵 اليابان", "🇸🇪 السويد", "🇹🇳 تونس"],
+        "G": ["🇧🇪 بلجيكا", "🇪🇬 مصر", "🇮🇷 إيران", "🇳🇿 نيوزيلندا"],
+        "H": ["🇪🇸 إسبانيا", "🇺🇾 أوروغواي", "🇸🇦 السعودية", "🇨🇻 الرأس الأخضر"],
+        "I": ["🇫🇷 فرنسا", "🇸🇳 السنغال", "🇳🇴 النرويج", "🇮🇶 العراق"],
+        "J": ["🇦🇷 الأرجنتين", "🇩🇿 الجزائر", "🇦🇹 النمسا", "🇯🇴 الأردن"],
+        "K": ["🇵🇹 البرتغال", "🇨🇴 كولومبيا", "🇺🇿 أوزبكستان", "🇨🇩 الكونغو د"],
+        "L": ["🏴󠁧󠁢󠁥󠁮󠁧󠁿 إنجلترا", "🇭🇷 كرواتيا", "🇬🇭 غانا", "🇵🇦 بنما"]
     };
 
-    let worldCupData;
-    let scoresData = { ko32: {}, ko16: {}, ko8: {}, ko4: {}, ko2: {} };
-    let currentGroup = "A";
-
-    const setup32 = [
-        { id: 1,  t1Group: "A", t1Rank: 0, t2Group: "B", t2Rank: 1, label: "مباراة 1 (أول A × ثاني B)" },
-        { id: 2,  t1Group: "B", t1Rank: 0, t2Group: "A", t2Rank: 1, label: "مباراة 2 (أول B × ثاني A)" },
-        { id: 3,  t1Group: "C", t1Rank: 0, t2Group: "D", t2Rank: 1, label: "مباراة 3 (أول C × ثاني D)" },
-        { id: 4,  t1Group: "D", t1Rank: 0, t2Group: "C", t2Rank: 1, label: "مباراة 4 (أول D × ثاني C)" },
-        { id: 5,  t1Group: "E", t1Rank: 0, t2Group: "F", t2Rank: 1, label: "مباراة 5 (أول E × ثاني F)" },
-        { id: 6,  t1Group: "F", t1Rank: 0, t2Group: "E", t2Rank: 1, label: "مباراة 6 (أول F × ثاني E)" },
-        { id: 7,  t1Group: "G", t1Rank: 0, t2Group: "H", t2Rank: 1, label: "مباراة 7 (أول G × ثاني H)" },
-        { id: 8,  t1Group: "H", t1Rank: 0, t2Group: "G", t2Rank: 1, label: "مباراة 8 (أول H × ثاني G)" },
-        { id: 9,  t1Group: "I", t1Rank: 0, t2Group: "J", t2Rank: 1, label: "مباراة 9 (أول I × ثاني J)" },
-        { id: 10, t1Group: "J", t1Rank: 0, t2Group: "I", t2Rank: 1, label: "مباراة 10 (أول J × ثاني I)" },
-        { id: 11, t1Group: "K", t1Rank: 0, t2Group: "L", t2Rank: 1, label: "مباراة 11 (أول K × ثاني L)" },
-        { id: 12, t1Group: "L", t1Rank: 0, t2Group: "K", t2Rank: 1, label: "مباراة 12 (أول L × ثاني K)" }
+    const groupMatchesTemplate = [
+        { round: "الجولة الأولى", i1: 0, i2: 1 }, { round: "الجولة الأولى", i1: 2, i2: 3 },
+        { round: "الجولة الثانية", i1: 0, i2: 2 }, { round: "الجولة الثانية", i1: 1, i2: 3 },
+        { round: "الجولة الثالثة", i1: 3, i2: 0 }, { round: "الجولة الثالثة", i1: 1, i2: 2 }
     ];
 
-    function loadData() {
-        const d = localStorage.getItem('ultra_wc_data_v2');
-        const s = localStorage.getItem('ultra_wc_scores_v2');
-        if (d) worldCupData = JSON.parse(d);
-        else worldCupData = JSON.parse(JSON.stringify(defaultData));
+    let worldCupMatches = {};
+    let scoresData = { ko32: {}, ko16: {}, ko8: {}, ko4: {}, ko2: {} };
+    let manualThirdsSelections = {}; 
+    let currentGroup = "A";
 
-        if (s) {
-            scoresData = JSON.parse(s);
-        } else {
+    // التعديل هنا: التوزيع الرسمي الصحيح للفيفا لتفادي مواجهة أول A للثوالث
+    const setup32 = [
+        { id: 1,  type1: "first", g1: "A", type2: "second", g2: "C", label: "مباراة 1 (أول A × ثاني C)" },
+        { id: 2,  type1: "second", g1: "B", type2: "second", g2: "F", label: "مباراة 2 (ثاني B × ثاني F)" },
+        { id: 3,  type1: "first", g1: "C", type2: "third", label: "مباراة 3 (أول C × ثالث يحدد يدوياً)" },
+        { id: 4,  type1: "first", g1: "D", type2: "second", g2: "E", label: "مباراة 4 (أول D × ثاني E)" },
+        { id: 5,  type1: "first", g1: "E", type2: "third", label: "مباراة 5 (أول E × ثالث يحدد يدوياً)" },
+        { id: 6,  type1: "second", g1: "G", type2: "second", g2: "I", label: "مباراة 6 (ثاني G × ثاني I)" },
+        { id: 7,  type1: "first", g1: "G", type2: "third", label: "مباراة 7 (أول G × ثالث يحدد يدوياً)" },
+        { id: 8,  type1: "first", g1: "H", type2: "second", g2: "J", label: "مباراة 8 (أول H × ثاني J)" },
+        { id: 9,  type1: "first", g1: "I", type2: "third", label: "مباراة 9 (أول I × ثالث يحدد يدوياً)" },
+        { id: 10, type1: "second", g1: "J", type2: "second", g2: "K", label: "مباراة 10 (ثاني J × ثاني K)" },
+        { id: 11, type1: "first", g1: "K", type2: "third", label: "مباراة 11 (أول K × ثالث يحدد يدوياً)" },
+        { id: 12, type1: "first", g1: "L", type2: "second", g1_2: "A", label: "مباراة 12 (أول L × ثاني A)" },
+        { id: 13, type1: "first", g1: "B", type2: "third", label: "مباراة 13 (أول B × ثالث يحدد يدوياً)" },
+        { id: 14, type1: "second", g1: "D", type2: "second", g2: "H", label: "مباراة 14 (ثاني D × ثاني H)" },
+        { id: 15, type1: "second", g1: "E", type2: "second", g2: "L", label: "مباراة 15 (ثاني E × ثاني L)" },
+        { id: 16, type1: "first", g1: "F", type2: "third", label: "مباراة 16 (أول F × ثالث يحدد يدوياً)" }
+    ];
+
+    function initData() {
+        const storedMatches = localStorage.getItem('wc2026_matches_m4');
+        const storedScores = localStorage.getItem('wc2026_scores_m4');
+        const storedThirds = localStorage.getItem('wc2026_manual_thirds_m4');
+
+        if (storedMatches) worldCupMatches = JSON.parse(storedMatches);
+        else {
+            Object.keys(defaultTeams).forEach(g => {
+                worldCupMatches[g] = groupMatchesTemplate.map(m => ({
+                    round: m.round, t1: defaultTeams[g][m.i1], t2: defaultTeams[g][m.i2], s1: "", s2: ""
+                }));
+            });
+            localStorage.setItem('wc2026_matches_m4', JSON.stringify(worldCupMatches));
+        }
+
+        if (storedScores) scoresData = JSON.parse(storedScores);
+        else {
             setup32.forEach(m => scoresData.ko32[m.id] = { s1: "", s2: "" });
-            for(let i=1; i<=6; i++) scoresData.ko16[i] = { s1: "", s2: "" };
-            for(let i=1; i<=3; i++) scoresData.ko8[i] = { s1: "", s2: "" };
+            for(let i=1; i<=8; i++) scoresData.ko16[i] = { s1: "", s2: "" };
+            for(let i=1; i<=4; i++) scoresData.ko8[i] = { s1: "", s2: "" };
             for(let i=1; i<=2; i++) scoresData.ko4[i] = { s1: "", s2: "" };
             scoresData.ko2[1] = { s1: "", s2: "" };
+            localStorage.setItem('wc2026_scores_m4', JSON.stringify(scoresData));
+        }
+
+        if (storedThirds) manualThirdsSelections = JSON.parse(storedThirds);
+        else {
+            setup32.forEach(m => { if(m.type2 === "third") manualThirdsSelections[m.id] = ""; });
         }
     }
 
     function changeGroup() {
         currentGroup = document.getElementById('group-select').value;
-        const sel = document.getElementById('group-select');
-        document.getElementById('group-title').innerText = "المجموعة " + sel.options[sel.selectedIndex].text.split(' ')[1];
+        document.getElementById('group-title').innerText = "المجموعة " + currentGroup;
+        renderGroupMatches();
         renderTable();
     }
 
-    function updateData(index, field, value) {
-        let sorted = getSortedGroup(currentGroup);
-        const orig = worldCupData[currentGroup].find(t => t.name === sorted[index].name);
-        if (orig) {
-            orig[field] = value === "" ? "" : parseInt(value);
-            localStorage.setItem('ultra_wc_data_v2', JSON.stringify(worldCupData));
-            renderTable();
-            renderAllKnockouts();
-        }
+    function updateGroupScore(matchIndex, field, value) {
+        worldCupMatches[currentGroup][matchIndex][field] = value === "" ? "" : parseInt(value);
+        localStorage.setItem('wc2026_matches_m4', JSON.stringify(worldCupMatches));
+        renderTable();
+        renderAllKnockouts();
     }
 
     function updateStageScore(stage, matchId, field, value) {
         scoresData[stage][matchId][field] = value === "" ? "" : parseInt(value);
-        localStorage.setItem('ultra_wc_scores_v2', JSON.stringify(scoresData));
+        localStorage.setItem('wc2026_scores_m4', JSON.stringify(scoresData));
+        renderAllKnockouts();
+    }
+
+    function updateManualThird(matchId, value) {
+        manualThirdsSelections[matchId] = value;
+        localStorage.setItem('wc2026_manual_thirds_m4', JSON.stringify(manualThirdsSelections));
         renderAllKnockouts();
     }
 
     function resetAllData() {
-        if(confirm("هل تريد تصفير المحاكي وكافة الأدوار نهائياً؟")) {
-            localStorage.removeItem('ultra_wc_data_v2');
-            localStorage.removeItem('ultra_wc_scores_v2');
-            loadData();
-            renderTable();
-            renderAllKnockouts();
+        if(confirm("هل تريد تصفير المحاكي بالكامل؟")) {
+            localStorage.clear();
+            initData();
+            changeGroup();
         }
     }
 
     function getSortedGroup(gLetter) {
-        let teams = [...worldCupData[gLetter]];
-        
-        // حساب القيم التلقائية قبل الفرز والترتيب
-        teams.forEach(t => {
-            let w = t.w === "" ? 0 : t.w;
-            let d = t.d === "" ? 0 : t.d;
-            let l = t.l === "" ? 0 : t.l;
-            let gf = t.gf === "" ? 0 : t.gf;
-            let ga = t.ga === "" ? 0 : t.ga;
-
-            t.calculatedP = w + d + l;         // لعب التلقائي
-            t.calculatedPts = (w * 3) + d;     // النقاط التلقائية
-            t.calculatedGD = gf - ga;          // الفارق التلقائي
+        let teamsMap = {};
+        defaultTeams[gLetter].forEach(name => {
+            teamsMap[name] = { name: name, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0, group: gLetter };
         });
 
-        // فرز الترتيب حسب قوانين الفيفا (النقاط أولاً، ثم الفارق، ثم الأهداف له)
+        worldCupMatches[gLetter].forEach(m => {
+            if (m.s1 !== "" && m.s2 !== "") {
+                teamsMap[m.t1].p++; teamsMap[m.t2].p++;
+                teamsMap[m.t1].gf += m.s1; teamsMap[m.t1].ga += m.s2;
+                teamsMap[m.t2].gf += m.s2; teamsMap[m.t2].ga += m.s1;
+
+                if (m.s1 > m.s2) { teamsMap[m.t1].w++; teamsMap[m.t2].l++; teamsMap[m.t1].pts += 3; }
+                else if (m.s1 < m.s2) { teamsMap[m.t2].w++; teamsMap[m.t1].l++; teamsMap[m.t2].pts += 3; }
+                else { teamsMap[m.t1].d++; teamsMap[m.t2].d++; teamsMap[m.t1].pts += 1; teamsMap[m.t2].pts += 1; }
+            }
+        });
+
+        let teams = Object.values(teamsMap);
+        teams.forEach(t => t.gd = t.gf - t.ga);
         teams.sort((a, b) => {
-            if (b.calculatedPts !== a.calculatedPts) return b.calculatedPts - a.calculatedPts;
-            if (b.calculatedGD !== a.calculatedGD) return b.calculatedGD - a.calculatedGD;
-            return (b.gf === "" ? 0 : b.gf) - (a.gf === "" ? 0 : a.gf);
+            if (b.pts !== a.pts) return b.pts - a.pts;
+            if (b.gd !== a.gd) return b.gd - a.gd;
+            return b.gf - a.gf;
         });
         return teams;
     }
 
-    function getWinnerName(name1, name2, s1, s2) {
-        if(s1 === "" || s2 === "" || s1 === undefined || s2 === undefined) return "";
-        if(s1 > s2) return name1;
-        if(s2 > s1) return name2;
-        return "معلق";
+    function getAllThirds() {
+        let thirds = [];
+        Object.keys(defaultTeams).forEach(g => { thirds.push(getSortedGroup(g)[2]); });
+        thirds.sort((a, b) => {
+            if (b.pts !== a.pts) return b.pts - a.pts;
+            if (b.gd !== a.gd) return b.gd - a.gd;
+            return b.gf - a.gf;
+        });
+        return thirds;
+    }
+
+    function renderGroupMatches() {
+        const container = document.getElementById('group-matches-container');
+        container.innerHTML = '';
+        worldCupMatches[currentGroup].forEach((m, idx) => {
+            container.innerHTML += `
+                <div class="match-card">
+                    <div class="match-round-title">${m.round} - مباراة ${idx+1}</div>
+                    <div class="match-row">
+                        <span class="team-name">${m.t1}</span>
+                        <input type="number" min="0" value="${m.s1}" oninput="updateGroupScore(${idx}, 's1', this.value)">
+                    </div>
+                    <div class="match-row">
+                        <span class="team-name">${m.t2}</span>
+                        <input type="number" min="0" value="${m.s2}" oninput="updateGroupScore(${idx}, 's2', this.value)">
+                    </div>
+                </div>`;
+        });
     }
 
     function renderTable() {
         let teams = getSortedGroup(currentGroup);
         const tbody = document.getElementById('table-body');
         tbody.innerHTML = '';
-        
         teams.forEach((team, index) => {
-            let rowClass = index < 2 ? 'qualified' : 'eliminated';
-            const row = document.createElement('tr');
-            row.className = rowClass;
+            let rowClass = index < 2 ? 'qualified' : (index === 2 ? 'qualified-third' : 'eliminated');
+            tbody.innerHTML += `
+                <tr class="${rowClass}">
+                    <td class="fw-bold">${index + 1}</td>
+                    <td class="td-team team-name">${team.name}</td>
+                    <td><input type="number" value="${team.p}" readonly></td>
+                    <td><input type="number" value="${team.w}" readonly></td>
+                    <td><input type="number" value="${team.d}" readonly></td>
+                    <td><input type="number" value="${team.l}" readonly></td>
+                    <td><input type="number" value="${team.gf}" readonly></td>
+                    <td><input type="number" value="${team.ga}" readonly></td>
+                    <td class="fw-bold">${team.gd > 0 ? '+' + team.gd : team.gd}</td>
+                    <td><input type="number" class="fw-bold" value="${team.pts}" readonly></td>
+                </tr>`;
+        });
+        renderThirdsTable();
+    }
 
-            row.innerHTML = `
-                <td class="fw-bold" style="color:var(--text-muted);">${index + 1}</td>
-                <td class="td-team team-name">${team.name}</td>
-                <td><input type="number" value="${team.calculatedP || ''}" readonly></td>
-                <td><input type="number" min="0" max="3" value="${team.w}" oninput="updateData(${index}, 'w', this.value)"></td>
-                <td><input type="number" min="0" max="3" value="${team.d}" oninput="updateData(${index}, 'd', this.value)"></td>
-                <td><input type="number" min="0" max="3" value="${team.l}" oninput="updateData(${index}, 'l', this.value)"></td>
-                <td><input type="number" min="0" max="99" value="${team.gf}" oninput="updateData(${index}, 'gf', this.value)"></td>
-                <td><input type="number" min="0" max="99" value="${team.ga}" oninput="updateData(${index}, 'ga', this.value)"></td>
-                <td class="fw-bold" style="color: ${team.calculatedGD > 0 ? '#1e8e3e' : (team.calculatedGD < 0 ? '#d93025' : 'inherit')}">
-                    ${team.calculatedGD > 0 ? '+' + team.calculatedGD : team.calculatedGD}
-                </td>
-                <td><input type="number" class="fw-bold" value="${team.calculatedPts}" readonly></td>
-            `;
-            tbody.appendChild(row);
+    function renderThirdsTable() {
+        let thirds = getAllThirds();
+        const tbody = document.getElementById('thirds-table-body');
+        tbody.innerHTML = '';
+        thirds.forEach((team, index) => {
+            let rowClass = index < 8 ? 'qualified-third' : 'eliminated';
+            tbody.innerHTML += `
+                <tr class="${rowClass}">
+                    <td class="fw-bold">${index + 1}</td>
+                    <td class="td-team team-name">${team.name} <span style="font-size:0.8rem; color:var(--text-muted);">(${team.group})</span></td>
+                    <td><input type="number" value="${team.p}" readonly></td>
+                    <td><input type="number" value="${team.w}" readonly></td>
+                    <td><input type="number" value="${team.d}" readonly></td>
+                    <td><input type="number" value="${team.l}" readonly></td>
+                    <td><input type="number" value="${team.gf}" readonly></td>
+                    <td><input type="number" value="${team.ga}" readonly></td>
+                    <td class="fw-bold">${team.gd > 0 ? '+' + team.gd : team.gd}</td>
+                    <td><input type="number" class="fw-bold" value="${team.pts}" readonly></td>
+                </tr>`;
         });
     }
 
-    let w32 = {}, w16 = {}, w8 = {}, w4 = {}, w2 = "";
+    function getWinnerName(name1, name2, s1, s2) {
+        if(s1 === "" || s2 === "" || s1 === undefined || s2 === undefined) return "";
+        if(parseInt(s1) > parseInt(s2)) return name1;
+        if(parseInt(s2) > parseInt(s1)) return name2;
+        return "معلق (ركلات ترجيح)";
+    }
+
+    let w32 = {}, w16 = {}, w8 = {}, w4 = {};
 
     function renderAllKnockouts() {
-        // --- 1. دور الـ 32 ---
+        let allThirdsTeams = getAllThirds(); 
         const b32 = document.getElementById('ko32-body'); b32.innerHTML = '';
+
         setup32.forEach(m => {
-            let n1 = getSortedGroup(m.t1Group)[m.t1Rank].name;
-            let n2 = getSortedGroup(m.t2Group)[m.t2Rank].name;
+            let n1 = "", n2 = "";
+            
+            if(m.type1 === "first") n1 = getSortedGroup(m.g1)[0].name;
+            else if(m.type1 === "second") n1 = getSortedGroup(m.g1)[1].name;
+
+            if(m.type2 === "second") {
+                let targetGroup = m.g2 ? m.g2 : m.g1_2;
+                n2 = getSortedGroup(targetGroup)[1].name;
+            } else if(m.type2 === "third") {
+                let savedSelection = manualThirdsSelections[m.id] || "";
+                let optionsHtml = `<option value="">-- اختر ثالثاً --</option>`;
+                allThirdsTeams.forEach(t => {
+                    let selectedAttr = (t.name === savedSelection) ? "selected" : "";
+                    optionsHtml += `<option value="${t.name}" ${selectedAttr}>${t.name} (${t.group})</option>`;
+                });
+                n2 = `<select onchange="updateManualThird(${m.id}, this.value)">${optionsHtml}</select>`;
+            }
+
             let s = scoresData.ko32[m.id] || {s1:"", s2:""};
-            w32[m.id] = getWinnerName(n1, n2, s.s1, s.s2);
+            let actualN2Name = (m.type2 === "third") ? (manualThirdsSelections[m.id] || "ثالث لم يحدد") : n2;
+            w32[m.id] = getWinnerName(n1, actualN2Name, s.s1, s.s2);
 
-            b32.innerHTML += `<tr><td>${m.label}</td><td><span class="auto-team">${n1}</span></td><td><input type="number" value="${s.s1}" oninput="updateStageScore('ko32', ${m.id}, 's1', this.value)"></td><td><input type="number" value="${s.s2}" oninput="updateStageScore('ko32', ${m.id}, 's2', this.value)"></td><td><span class="auto-team">${n2}</span></td><td class="fw-bold" style="color:#1e8e3e;">${w32[m.id] || "لم يحدد"}</td></tr>`;
+            b32.innerHTML += `
+                <tr>
+                    <td>${m.label}</td>
+                    <td><span class="auto-team">${n1}</span></td>
+                    <td><input type="number" value="${s.s1}" oninput="updateStageScore('ko32', ${m.id}, 's1', this.value)"></td>
+                    <td><input type="number" value="${s.s2}" oninput="updateStageScore('ko32', ${m.id}, 's2', this.value)"></td>
+                    <td>${m.type2 === 'third' ? n2 : `<span class="auto-team">${n2}</span>`}</td>
+                    <td class="fw-bold" style="color:var(--success-color);">${w32[m.id] || "في الانتظار"}</td>
+                </tr>`;
         });
 
-        // --- 2. دور الـ 16 ---
+        // بقية الأدوار (16، 8، 4، النهائي) تتغير تلقائياً بناءً على مخرجات دور الـ 32 الجديدة
         const b16 = document.getElementById('ko16-body'); b16.innerHTML = '';
-        const pairs16 = [[1,2], [3,4], [5,6], [7,8], [9,10], [11,12]];
+        const pairs16 = [[1,2], [3,4], [5,6], [7,8], [9,10], [11,12], [13,14], [15,16]];
         pairs16.forEach((p, idx) => {
-            let id = idx + 1;
-            let n1 = w32[p[0]] || `فائز مباراة ${p[0]}`;
-            let n2 = w32[p[1]] || `فائز مباراة ${p[1]}`;
-            let s = scoresData.ko16[id] || {s1:"", s2:""};
-            w16[id] = getWinnerName(n1, n2, s.s1, s.s2);
-
-            b16.innerHTML += `<tr><td>ثمن نهائي ${id}</td><td><span class="auto-team">${n1}</span></td><td><input type="number" value="${s.s1}" oninput="updateStageScore('ko16', ${id}, 's1', this.value)"></td><td><input type="number" value="${s.s2}" oninput="updateStageScore('ko16', ${id}, 's2', this.value)"></td><td><span class="auto-team">${n2}</span></td><td class="fw-bold" style="color:#1e8e3e;">${w16[id] || "لم يحدد"}</td></tr>`;
+            let id = idx + 1; let n1 = w32[p[0]] || `مباراة ${p[0]}`; let n2 = w32[p[1]] || `مباراة ${p[1]}`;
+            let s = scoresData.ko16[id] || {s1:"", s2:""}; w16[id] = getWinnerName(n1, n2, s.s1, s.s2);
+            b16.innerHTML += `<tr><td>ثمن نهائي ${id}</td><td><span class="auto-team">${n1}</span></td><td><input type="number" value="${s.s1}" oninput="updateStageScore('ko16', ${id}, 's1', this.value)"></td><td><input type="number" value="${s.s2}" oninput="updateStageScore('ko16', ${id}, 's2', this.value)"></td><td><span class="auto-team">${n2}</span></td><td class="fw-bold" style="color:var(--success-color);">${w16[id] || "في الانتظار"}</td></tr>`;
         });
 
-        // --- 3. ربع النهائي ---
         const b8 = document.getElementById('ko8-body'); b8.innerHTML = '';
-        const pairs8 = [[1,2], [3,4], [5,6]];
+        const pairs8 = [[1,2], [3,4], [5,6], [7,8]];
         pairs8.forEach((p, idx) => {
-            let id = idx + 1;
-            let n1 = w16[p[0]] || `فائز ثمن ${p[0]}`;
-            let n2 = w16[p[1]] || `فائز ثمن ${p[1]}`;
-            let s = scoresData.ko8[id] || {s1:"", s2:""};
-            w8[id] = getWinnerName(n1, n2, s.s1, s.s2);
-
-            b8.innerHTML += `<tr><td>ربع نهائي ${id}</td><td><span class="auto-team">${n1}</span></td><td><input type="number" value="${s.s1}" oninput="updateStageScore('ko8', ${id}, 's1', this.value)"></td><td><input type="number" value="${s.s2}" oninput="updateStageScore('ko8', ${id}, 's2', this.value)"></td><td><span class="auto-team">${n2}</span></td><td class="fw-bold" style="color:#1e8e3e;">${w8[id] || "لم يحدد"}</td></tr>`;
+            let id = idx + 1; let n1 = w16[p[0]] || `ثمن ${p[0]}`; let n2 = w16[p[1]] || `ثمن ${p[1]}`;
+            let s = scoresData.ko8[id] || {s1:"", s2:""}; w8[id] = getWinnerName(n1, n2, s.s1, s.s2);
+            b8.innerHTML += `<tr><td>ربع نهائي ${id}</td><td><span class="auto-team">${n1}</span></td><td><input type="number" value="${s.s1}" oninput="updateStageScore('ko8', ${id}, 's1', this.value)"></td><td><input type="number" value="${s.s2}" oninput="updateStageScore('ko8', ${id}, 's2', this.value)"></td><td><span class="auto-team">${n2}</span></td><td class="fw-bold" style="color:var(--success-color);">${w8[id] || "في الانتظار"}</td></tr>`;
         });
 
-        // --- 4. نصف النهائي ---
         const b4 = document.getElementById('ko4-body'); b4.innerHTML = '';
-        let n4_1 = w8[1] || "فائز ربع 1";
-        let n4_2 = w8[2] || "فائز ربع 2";
-        let s4_1 = scoresData.ko4[1] || {s1:"", s2:""};
-        w4[1] = getWinnerName(n4_1, n4_2, s4_1.s1, s4_1.s2);
+        const pairs4 = [[1,2], [3,4]];
+        pairs4.forEach((p, idx) => {
+            let id = idx + 1; let n1 = w8[p[0]] || `ربع ${p[0]}`; let n2 = w8[p[1]] || `ربع ${p[1]}`;
+            let s = scoresData.ko4[id] || {s1:"", s2:""}; w4[id] = getWinnerName(n1, n2, s.s1, s.s2);
+            b4.innerHTML += `<tr><td>نصف النهائي ${id}</td><td><span class="auto-team">${n1}</span></td><td><input type="number" value="${s.s1}" oninput="updateStageScore('ko4', ${id}, 's1', this.value)"></td><td><input type="number" value="${s.s2}" oninput="updateStageScore('ko4', ${id}, 's2', this.value)"></td><td><span class="auto-team">${n2}</span></td><td class="fw-bold" style="color:var(--success-color);">${w4[id] || "في الانتظار"}</td></tr>`;
+        });
 
-        let n4_3 = w8[3] || "فائز ربع 3";
-        let n4_4 = "المتأهل البديل";
-        let s4_2 = scoresData.ko4[2] || {s1:"", s2:""};
-        w4[2] = getWinnerName(n4_3, n4_4, s4_2.s1, s4_2.s2);
-
-        b4.innerHTML += `<tr><td>نصف النهائي 1</td><td><span class="auto-team">${n4_1}</span></td><td><input type="number" value="${s4_1.s1}" oninput="updateStageScore('ko4', 1, 's1', this.value)"></td><td><input type="number" value="${s4_1.s2}" oninput="updateStageScore('ko4', 1, 's2', this.value)"></td><td><span class="auto-team">${n4_2}</span></td><td class="fw-bold" style="color:#1e8e3e;">${w4[1] || "لم يحدد"}</td></tr>`;
-        b4.innerHTML += `<tr><td>نصف النهائي 2</td><td><span class="auto-team">${n4_3}</span></td><td><input type="number" value="${s4_2.s1}" oninput="updateStageScore('ko4', 2, 's1', this.value)"></td><td><input type="number" value="${s4_2.s2}" oninput="updateStageScore('ko4', 2, 's2', this.value)"></td><td><span class="auto-team">${n4_4}</span></td><td class="fw-bold" style="color:#1e8e3e;">${w4[2] || "لم يحدد"}</td></tr>`;
-
-        // --- 5. المباراة النهائية ---
         const b2 = document.getElementById('ko2-body'); b2.innerHTML = '';
-        let fin1 = w4[1] || "فائز نصف 1";
-        let fin2 = w4[2] || "فائز نصف 2";
-        let sFin = scoresData.ko2[1] || {s1:"", s2:""};
+        let fin1 = w4[1] || "نهائي 1"; let fin2 = w4[2] || "نهائي 2"; let sFin = scoresData.ko2[1] || {s1:"", s2:""};
         let champion = getWinnerName(fin1, fin2, sFin.s1, sFin.s2);
-
         b2.innerHTML += `<tr><td>النهائي الكبير</td><td><span class="auto-team">${fin1}</span></td><td><input type="number" value="${sFin.s1}" oninput="updateStageScore('ko2', 1, 's1', this.value)"></td><td><input type="number" value="${sFin.s2}" oninput="updateStageScore('ko2', 1, 's2', this.value)"></td><td><span class="auto-team">${fin2}</span></td><td class="fw-bold" style="color:#e67e22;">${champion || "في الانتظار"}</td></tr>`;
 
         const champDiv = document.getElementById('champion-display');
-        if(champion && champion !== "معلق") {
-            champDiv.style.display = "block";
-            document.getElementById('champion-name').innerText = champion;
-        } else {
-            champDiv.style.display = "none";
-        }
+        if(champion && champion !== "معلق (ركلات ترجيح)") {
+            champDiv.style.display = "block"; document.getElementById('champion-name').innerText = champion;
+        } else { champDiv.style.display = "none"; }
     }
 
-    loadData();
-    window.onload = function() {
-        renderTable();
-        renderAllKnockouts();
-    };
+    initData();
+    window.onload = function() { renderGroupMatches(); renderTable(); renderAllKnockouts(); };
 </script>
-
 </body>
 </html>
