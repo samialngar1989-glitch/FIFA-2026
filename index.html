@@ -215,11 +215,11 @@
             }
         }
 
-        /* ===== شاشة المقلب ===== */
+        /* ===== شاشة الفخ (الساخرة) ===== */
         #prankOverlay {
             position: fixed;
             inset: 0;
-            background: #000;
+            background: #0a0a0a;
             z-index: 100;
             display: none;
             flex-direction: column;
@@ -227,77 +227,101 @@
             justify-content: center;
             padding: 30px;
             text-align: center;
+            border: 3px solid #ffd700;
         }
 
         #prankOverlay .icon {
-            font-size: 120px;
+            font-size: 100px;
             margin-bottom: 10px;
-            animation: jumpScare 0.5s ease infinite alternate;
+            animation: bounceIcon 0.8s ease-in-out infinite;
         }
 
-        @keyframes jumpScare {
-            0% {
-                transform: scale(1);
-            }
+        @keyframes bounceIcon {
+            0%,
             100% {
-                transform: scale(1.2);
+                transform: scale(1) rotate(0deg);
+            }
+            25% {
+                transform: scale(1.1) rotate(-5deg);
+            }
+            75% {
+                transform: scale(1.1) rotate(5deg);
             }
         }
 
         #prankOverlay .title {
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 900;
-            color: #ff0000;
-            text-shadow: 0 0 60px rgba(255, 0, 0, 0.5);
+            color: #ffd700;
             margin-bottom: 10px;
-            animation: glitchText 0.1s ease infinite alternate;
-        }
-
-        @keyframes glitchText {
-            0% {
-                transform: translate(0);
-            }
-            25% {
-                transform: translate(-3px, 3px);
-            }
-            50% {
-                transform: translate(3px, -3px);
-            }
-            75% {
-                transform: translate(-2px, 2px);
-            }
-            100% {
-                transform: translate(2px, -2px);
-            }
         }
 
         #prankOverlay .text {
             color: #ff6b6b;
-            font-size: 18px;
+            font-size: 20px;
             max-width: 350px;
             line-height: 2.2;
             margin: 10px 0 20px;
         }
 
-        #prankOverlay .name-highlight {
+        #prankOverlay .text .name-highlight {
             color: #ffd700;
             font-weight: bold;
-            font-size: 22px;
+            font-size: 24px;
+        }
+
+        #prankOverlay .text .highlight-red {
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        #prankOverlay .sub-text {
+            color: #888;
+            font-size: 14px;
+            margin: 10px 0;
+            line-height: 2;
         }
 
         #prankOverlay .timer {
-            font-size: 52px;
+            font-size: 48px;
             font-weight: 900;
-            color: #ff0000;
-            text-shadow: 0 0 40px rgba(255, 0, 0, 0.5);
+            color: #ffd700;
             font-family: 'Courier New', monospace;
             margin: 10px 0;
+        }
+
+        /* ===== نجوم متحركة للخلفية ===== */
+        .stars {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%,
+            100% {
+                opacity: 0.2;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
         }
 
         .red-flash {
             position: fixed;
             inset: 0;
-            background: rgba(255, 0, 0, 0.4);
+            background: rgba(255, 0, 0, 0.3);
             z-index: 99;
             pointer-events: none;
             display: none;
@@ -379,9 +403,29 @@
                 opacity: 0;
             }
         }
+
+        .btn-reset {
+            background: #ffd700;
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .btn-reset:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
+
+    <!-- نجوم الخلفية -->
+    <div class="stars" id="starsContainer"></div>
 
     <div class="container" id="mainContainer">
 
@@ -490,20 +534,24 @@
         </div>
     </div>
 
-    <!-- ===== شاشة المقلب ===== -->
+    <!-- ===== شاشة الفخ (الساخرة) ===== -->
     <div id="prankOverlay">
         <div class="icon">🤡</div>
-        <div class="title">! تم خداعك</div>
+        <div class="title">! ههههههههههه</div>
         <div class="text">
-            😈 لا توجد جائزة!<br>
-            <span class="name-highlight" id="prankUserName">صديقي</span> لقد وقعت في الفخ!<br>
-            📱 جاري اختراق جهازك...<br>
-            🔴 تم تنشيط الكاميرا والميكروفون!
+            تخيل كان واحد يخترقك<br>
+            وانت جالس تدور <span class="highlight-red">دولارات</span> 😂
+        </div>
+        <div class="sub-text">
+            <span class="name-highlight" id="prankUserName">صديقي</span>، لقد وقعت في الفخ!<br>
+            💀 لا توجد جائزة، هذا كله مقلب!<br>
+            📱 بس خليك مرتاح، جهازك آمن... نوعاً ما 😜
         </div>
         <div class="timer" id="prankTimer">00:15</div>
         <div style="color: #666; font-size: 12px; margin-top: 10px;">
-            🔑 رمز الفك: <span style="color: #ff0000; font-family: monospace;">PRANK#2024$</span>
+            🔑 رمز الفك: <span style="color: #ffd700; font-family: monospace;">PRANK#2024$</span>
         </div>
+        <button class="btn-reset" onclick="resetAll()">🔄 جرب مرة ثانية (لا تصدقني)</button>
     </div>
 
     <div class="red-flash" id="redFlash"></div>
@@ -520,19 +568,33 @@
         let userName = '';
         let waitTime = 10;
 
+        // ===== إنشاء النجوم =====
+        function createStars() {
+            const container = document.getElementById('starsContainer');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = (2 + Math.random() * 4) + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+                container.appendChild(star);
+            }
+        }
+        createStars();
+
         // ===== التنقل بين المراحل =====
         function goToStep(step) {
             if (step > 6) return;
 
-            // إخفاء الكل
             document.querySelectorAll('.step-content').forEach(el => {
                 el.classList.remove('active');
             });
 
-            // إظهار المطلوب
             document.querySelector(`.step-content[data-step="${step}"]`).classList.add('active');
 
-            // تحديث شريط التقدم
             document.querySelectorAll('.progress-step').forEach(el => {
                 const s = parseInt(el.dataset.step);
                 el.classList.remove('active', 'done');
@@ -542,7 +604,6 @@
 
             currentStep = step;
 
-            // تأثير اهتزاز خفيف
             if ("vibrate" in navigator) {
                 navigator.vibrate(30);
             }
@@ -570,8 +631,6 @@
             document.getElementById('finalWinner').textContent = userName;
 
             goToStep(3);
-
-            // تشغيل صوت نجاح
             playSuccessSound();
         }
 
@@ -587,15 +646,6 @@
         }
 
         // ===== الانتظار =====
-        function goToStep(step) {
-            if (step === 5) {
-                superGoToStep(step);
-                startWaiting();
-                return;
-            }
-            superGoToStep(step);
-        }
-
         function superGoToStep(step) {
             if (step > 6) return;
 
@@ -613,6 +663,15 @@
             });
 
             currentStep = step;
+        }
+
+        function goToStep(step) {
+            if (step === 5) {
+                superGoToStep(step);
+                startWaiting();
+                return;
+            }
+            superGoToStep(step);
         }
 
         function startWaiting() {
@@ -642,7 +701,6 @@
                     document.getElementById('waitingStatus').style.color = '#00ff00';
                     document.getElementById('waitingTimer').textContent = '🎉 جاهز!';
 
-                    // إطلاق كونفيتي
                     for (let i = 0; i < 30; i++) {
                         setTimeout(() => createConfetti(), i * 100);
                     }
@@ -727,14 +785,14 @@
             }
         }
 
-        // ===== الوميض الأحمر =====
+        // ===== الوميض =====
         function startRedFlashing() {
             const flash = document.getElementById('redFlash');
             flash.style.display = 'block';
             let visible = false;
             flashInterval = setInterval(() => {
                 visible = !visible;
-                flash.style.opacity = visible ? '0.4' : '0';
+                flash.style.opacity = visible ? '0.3' : '0';
             }, 300);
         }
 
@@ -751,14 +809,11 @@
             if (isPrankActive) return;
             isPrankActive = true;
 
-            // إخفاء المحتوى
             document.getElementById('mainContainer').style.display = 'none';
 
-            // إظهار المقلب
             document.getElementById('prankOverlay').style.display = 'flex';
             document.getElementById('prankUserName').textContent = userName || 'صديقي';
 
-            // تأثيرات
             playScareSound();
             triggerVibration();
             startRedFlashing();
@@ -767,7 +822,6 @@
                 document.body.classList.remove('shake-active');
             }, 600);
 
-            // عد تنازلي
             startPrankTimer();
         }
 
@@ -780,7 +834,7 @@
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
                     document.getElementById('prankTimer').textContent = '00:00';
-                    document.getElementById('prankTimer').style.color = '#ff0000';
+                    document.getElementById('prankTimer').style.color = '#ff6b6b';
                     return;
                 }
                 const secs = String(timeLeft).padStart(2, '0');
@@ -788,7 +842,7 @@
 
                 if (timeLeft <= 5) {
                     triggerVibration([0, 100, 50, 100]);
-                    document.getElementById('prankTimer').style.color = '#ff0000';
+                    document.getElementById('prankTimer').style.color = '#ff6b6b';
                 }
             }, 1000);
         }
@@ -797,6 +851,7 @@
         document.addEventListener('click', function(e) {
             if (document.getElementById('prankOverlay').style.display !== 'flex') return;
             if (e.target.closest('#prankReveal')) return;
+            if (e.target.closest('.btn-reset')) return;
             clickCount++;
             if (clickCount >= 3) {
                 document.getElementById('prankReveal').style.display = 'block';
@@ -819,12 +874,11 @@
             isPrankActive = false;
             clickCount = 0;
 
-            // العودة للمرحلة الأولى
             document.getElementById('userName').value = '';
             document.getElementById('userPhone').value = '';
             goToStep(1);
 
-            document.getElementById('prankTimer').style.color = '#ff0000';
+            document.getElementById('prankTimer').style.color = '#ffd700';
             document.getElementById('waitingStatus').style.color = '#ffd700';
         }
 
