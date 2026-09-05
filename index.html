@@ -1,604 +1,836 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.8">
-    <title>محاكي كأس العالم 2026 - التوزيع الرسمي الصحيح</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🏆 مسابقة اليوبيل الذهبي</title>
     <style>
-        :root {
-            --primary-color: #1a73e8;
-            --border-color: #dadce0;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-muted: #70757a;
-            --bracket-bg: #f1f3f4;
-            --success-color: #1e8e3e;
-            --danger-color: #d93025;
-        }
-
-        body {
-            font-family: Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: #202124;
+        * {
             margin: 0;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
-            margin-bottom: 25px;
-        }
-
-        h1, h2, h3 {
-            text-align: center;
-            color: #202124;
-            margin-bottom: 5px;
-        }
-
-        h1 { font-size: 1.6rem; }
-        h2 { font-size: 1.4rem; margin-top: 20px; }
-        h3 { font-size: 1.1rem; background: #e8f0fe; padding: 6px; border-radius: 4px; color: var(--primary-color); }
-
-        .subtitle {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-
-        .selector-container {
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: #0a0a0a;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
         }
 
-        select {
-            padding: 6px 10px;
-            font-size: 0.9rem;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            outline: none;
-            cursor: pointer;
-            background-color: #fff;
-        }
-
-        .btn-reset {
-            background-color: var(--danger-color);
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            font-size: 0.95rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-reset:hover { background-color: #b31412; }
-
-        table {
+        .container {
+            max-width: 420px;
             width: 100%;
-            border-collapse: collapse;
+            background: #1a1a2e;
+            border-radius: 25px;
+            padding: 30px;
             text-align: center;
-            font-size: 0.9rem;
-            margin-bottom: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            min-height: 500px;
+            position: relative;
+            overflow: hidden;
         }
 
-        th, td {
-            padding: 8px 5px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background-color: #f1f3f4;
-            color: #202124;
-            font-weight: bold;
-        }
-
-        .th-team, .td-team {
-            text-align: right;
-            padding-right: 15px;
-            width: 25%;
-        }
-
-        .matches-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .match-card {
-            background: #fdfdfd;
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .match-row {
+        /* ===== شريط التقدم ===== */
+        .progress-bar {
             display: flex;
             justify-content: space-between;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: #333;
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .progress-step {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #333;
+            color: #666;
+            display: flex;
             align-items: center;
-        }
-
-        .match-round-title {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            border-bottom: 1px dashed var(--border-color);
-            padding-bottom: 3px;
-            margin-bottom: 4px;
+            justify-content: center;
             font-weight: bold;
+            font-size: 14px;
+            z-index: 1;
+            transition: all 0.5s;
+            position: relative;
         }
 
-        input[type="number"] {
-            width: 45px;
-            padding: 4px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        input[readonly] {
-            background-color: #f1f3f4;
-            border-color: transparent;
-            color: #202124;
-            font-weight: bold;
-            cursor: not-allowed;
-        }
-
-        .team-name {
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-
-        tr.qualified { border-right: 4px solid var(--success-color); }
-        tr.qualified-third { border-right: 4px solid #fbbc05; }
-        tr.eliminated { border-right: 4px solid var(--danger-color); }
-
-        .fw-bold { font-weight: bold; color: #202124; }
-
-        .auto-team {
-            background-color: var(--bracket-bg);
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-weight: 500;
-            display: inline-block;
-            min-width: 140px;
-            text-align: center;
-        }
-
-        .champion-box {
-            text-align: center;
-            background: linear-gradient(135deg, #fbbc05, #feb700);
+        .progress-step.active {
+            background: #ffd700;
             color: #000;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 1.4rem;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .progress-step.done {
+            background: #00ff00;
+            color: #000;
+        }
+
+        .progress-step .label {
+            position: absolute;
+            top: 40px;
+            font-size: 10px;
+            color: #888;
+            white-space: nowrap;
+        }
+
+        /* ===== المحتوى ===== */
+        .step-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .icon {
+            font-size: 70px;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 900;
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 14px;
+            line-height: 2;
+            margin-bottom: 20px;
+        }
+
+        .subtitle .highlight {
+            color: #ffd700;
             font-weight: bold;
-            margin-top: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ffd700, #f0a500);
+            color: #0a0a0a;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            box-shadow: 0 4px 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+            box-shadow: none;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        .input-field:focus {
+            border-color: #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+        }
+
+        .input-field::placeholder {
+            color: #555;
+        }
+
+        /* ===== شاشة الانتظار ===== */
+        .waiting-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid #333;
+            border-top: 4px solid #ffd700;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .waiting-text {
+            color: #ffd700;
+            font-size: 14px;
+            animation: blinkText 0.5s ease infinite alternate;
+        }
+
+        @keyframes blinkText {
+            0% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* ===== شاشة المقلب ===== */
+        #prankOverlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+        }
+
+        #prankOverlay .icon {
+            font-size: 120px;
+            margin-bottom: 10px;
+            animation: jumpScare 0.5s ease infinite alternate;
+        }
+
+        @keyframes jumpScare {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.2);
+            }
+        }
+
+        #prankOverlay .title {
+            font-size: 36px;
+            font-weight: 900;
+            color: #ff0000;
+            text-shadow: 0 0 60px rgba(255, 0, 0, 0.5);
+            margin-bottom: 10px;
+            animation: glitchText 0.1s ease infinite alternate;
+        }
+
+        @keyframes glitchText {
+            0% {
+                transform: translate(0);
+            }
+            25% {
+                transform: translate(-3px, 3px);
+            }
+            50% {
+                transform: translate(3px, -3px);
+            }
+            75% {
+                transform: translate(-2px, 2px);
+            }
+            100% {
+                transform: translate(2px, -2px);
+            }
+        }
+
+        #prankOverlay .text {
+            color: #ff6b6b;
+            font-size: 18px;
+            max-width: 350px;
+            line-height: 2.2;
+            margin: 10px 0 20px;
+        }
+
+        #prankOverlay .name-highlight {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 22px;
+        }
+
+        #prankOverlay .timer {
+            font-size: 52px;
+            font-weight: 900;
+            color: #ff0000;
+            text-shadow: 0 0 40px rgba(255, 0, 0, 0.5);
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+
+        .red-flash {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 0, 0, 0.4);
+            z-index: 99;
+            pointer-events: none;
+            display: none;
+        }
+
+        #prankReveal {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.92);
+            color: #00ff55;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 200;
+            display: none;
+            border: 2px solid #00ff55;
+            cursor: pointer;
+        }
+
+        .shake-active {
+            animation: shakeAnim 0.5s ease;
+        }
+
+        @keyframes shakeAnim {
+            0%,
+            100% {
+                transform: translate(0);
+            }
+            10% {
+                transform: translate(-15px, 5px);
+            }
+            20% {
+                transform: translate(15px, -5px);
+            }
+            30% {
+                transform: translate(-10px, 10px);
+            }
+            40% {
+                transform: translate(10px, -10px);
+            }
+            50% {
+                transform: translate(-5px, 5px);
+            }
+            60% {
+                transform: translate(5px, -5px);
+            }
+            70% {
+                transform: translate(-3px, 3px);
+            }
+            80% {
+                transform: translate(3px, -3px);
+            }
+            90% {
+                transform: translate(-2px, 2px);
+            }
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 50;
+            font-size: 30px;
+            animation: confettiFall 3s ease-in forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1 id="group-title">المجموعة A</h1>
-    <p class="subtitle">تم تصحيح الشجرة لتتوافق مع معايير الفيفا الرسمية لكأس العالم 2026.</p>
-    
-    <div class="selector-container">
-        <select id="group-select" onchange="changeGroup()">
-            <option value="A">المجموعة A</option>
-            <option value="B">المجموعة B</option>
-            <option value="C">المجموعة C</option>
-            <option value="D">المجموعة D</option>
-            <option value="E">المجموعة E</option>
-            <option value="F">المجموعة F</option>
-            <option value="G">المجموعة G</option>
-            <option value="H">المجموعة H</option>
-            <option value="I">المجموعة I</option>
-            <option value="J">المجموعة J</option>
-            <option value="K">المجموعة K</option>
-            <option value="L">المجموعة L</option>
-        </select>
-        <button class="btn-reset" onclick="resetAllData()">🔄 إعادة تصفير المحاكي بالكامل</button>
+    <div class="container" id="mainContainer">
+
+        <!-- ===== شريط التقدم ===== -->
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-step active" data-step="1">
+                1
+                <span class="label">المشاركة</span>
+            </div>
+            <div class="progress-step" data-step="2">
+                2
+                <span class="label">التسجيل</span>
+            </div>
+            <div class="progress-step" data-step="3">
+                3
+                <span class="label">النشر</span>
+            </div>
+            <div class="progress-step" data-step="4">
+                4
+                <span class="label">الفوز</span>
+            </div>
+            <div class="progress-step" data-step="5">
+                5
+                <span class="label">الانتظار</span>
+            </div>
+            <div class="progress-step" data-step="6">
+                6
+                <span class="label">الجائزة</span>
+            </div>
+        </div>
+
+        <!-- ===== المرحلة 1: المشاركة ===== -->
+        <div class="step-content active" data-step="1">
+            <div class="icon">📢</div>
+            <div class="title">! مسابقة اليوبيل الذهبي</div>
+            <div class="subtitle">
+                🎉 انضم إلى أكبر مسابقة في العالم!<br>
+                الجائزة الكبرى: <span class="highlight">$10,000</span><br>
+                <span style="color: #ff6b6b; font-size: 13px;">⚠️ 5000 شخص فقط سيشاركون!</span>
+            </div>
+            <button class="btn" onclick="goToStep(2)">🚀 شارك الآن</button>
+        </div>
+
+        <!-- ===== المرحلة 2: التسجيل ===== -->
+        <div class="step-content" data-step="2">
+            <div class="icon">✍️</div>
+            <div class="title">! سجل بياناتك</div>
+            <div class="subtitle">
+                ⚠️ أدخل معلوماتك لتأكيد المشاركة
+            </div>
+            <input type="text" class="input-field" id="userName" placeholder="👤 الاسم الكامل">
+            <input type="text" class="input-field" id="userPhone" placeholder="📱 رقم الهاتف">
+            <button class="btn" onclick="registerUser()">✅ تأكيد التسجيل</button>
+        </div>
+
+        <!-- ===== المرحلة 3: النشر ===== -->
+        <div class="step-content" data-step="3">
+            <div class="icon">📱</div>
+            <div class="title">! انشر المنشور</div>
+            <div class="subtitle">
+                ⚠️ انشر هذا المنشور على <span class="highlight">فيسبوك</span> أو <span class="highlight">واتساب</span><br>
+                📋 انسخ النص وألصقه:
+            </div>
+            <div style="background: #111; border-radius: 10px; padding: 15px; margin: 10px 0; text-align: right; font-size: 13px; color: #aaa; border: 1px solid #333;">
+                🎉 أنا اشتركت في مسابقة اليوبيل الذهبي!<br>
+                الجائزة الكبرى 10,000 دولار!<br>
+                ادخل انت كمان: [رابطك هنا]
+            </div>
+            <button class="btn" onclick="checkPublish()">✅ تم النشر</button>
+            <button class="btn btn-secondary" style="margin-top: 10px;" onclick="goToStep(4)">⏭️ تخطي</button>
+        </div>
+
+        <!-- ===== المرحلة 4: الفوز ===== -->
+        <div class="step-content" data-step="4">
+            <div class="icon">🎉</div>
+            <div class="title">! مبروك! لقد فزت!</div>
+            <div class="subtitle">
+                🏆 لقد تم اختيارك كفائز في المسابقة!<br>
+                <span class="highlight" id="winnerDisplay">أنت</span> فزت بـ <span class="highlight">$10,000</span>!
+            </div>
+            <button class="btn" onclick="goToStep(5)">💰 استلام الجائزة</button>
+        </div>
+
+        <!-- ===== المرحلة 5: الانتظار ===== -->
+        <div class="step-content" data-step="5">
+            <div class="icon">⏳</div>
+            <div class="title">! جاري التحقق من بياناتك</div>
+            <div class="subtitle">
+                🔍 نتحقق من صحة بياناتك...<br>
+                <span style="color: #ff6b6b;">⚠️ لا تغلق الصفحة!</span>
+            </div>
+            <div class="waiting-spinner"></div>
+            <div class="waiting-text" id="waitingStatus">🔄 جاري التحقق من الحساب...</div>
+            <div style="color: #666; font-size: 12px; margin-top: 10px;" id="waitingTimer">⏳ متبقي: 10 ثواني</div>
+        </div>
+
+        <!-- ===== المرحلة 6: الجائزة (الفخ) ===== -->
+        <div class="step-content" data-step="6">
+            <div class="icon">🎁</div>
+            <div class="title">! جائزتك جاهزة!</div>
+            <div class="subtitle">
+                ✅ تم تأكيد بياناتك بنجاح!<br>
+                <span class="highlight" id="finalWinner">أنت</span> تستحق <span class="highlight">$10,000</span>!
+            </div>
+            <button class="btn" onclick="startPrank()">💰 اضغط لاستلام الجائزة</button>
+        </div>
     </div>
 
-    <h3>🗓️ مباريات المجموعة</h3>
-    <div class="matches-grid" id="group-matches-container"></div>
-    
-    <h3>📊 جدول ترتيب المجموعة الحالي</h3>
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 5%;">#</th>
-                <th class="th-team">الفريق</th>
-                <th>لعب</th>
-                <th>ف</th>
-                <th>ت</th>
-                <th>خ</th>
-                <th>له</th>
-                <th>عليه</th>
-                <th>فارق</th>
-                <th class="fw-bold">نقاط</th>
-            </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-    </table>
-
-    <h3>🏅 جدول أفضل الثوالث (للاستخدام اليدوي بالأسفل)</h3>
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 5%;">#</th>
-                <th class="th-team">الفريق (المجموعة)</th>
-                <th>لعب</th>
-                <th>ف</th>
-                <th>ت</th>
-                <th>خ</th>
-                <th>له</th>
-                <th>عليه</th>
-                <th>فارق</th>
-                <th class="fw-bold">نقاط</th>
-            </tr>
-        </thead>
-        <tbody id="thirds-table-body"></tbody>
-    </table>
-</div>
-
-<div class="container">
-    <h2>🏆 شجرة الأدوار الإقصائية (المحدثة رسمياً)</h2>
-
-    <h3>1️⃣ دور الـ 32</h3>
-    <table id="ko-32-table">
-        <thead><tr><th>المباراة</th><th>الفريق الأول</th><th>له</th><th>له</th><th>الفريق الثاني</th><th>المتأهل</th></tr></thead>
-        <tbody id="ko32-body"></tbody>
-    </table>
-
-    <h3>2️⃣ دور الـ 16 (ثمن النهائي)</h3>
-    <table id="ko-16-table">
-        <thead><tr><th>المباراة</th><th>الفريق الأول</th><th>له</th><th>له</th><th>الفريق الثاني</th><th>المتأهل</th></tr></thead>
-        <tbody id="ko16-body"></tbody>
-    </table>
-
-    <h3>3️⃣ ربع النهائي</h3>
-    <table id="ko-8-table">
-        <thead><tr><th>المباراة</th><th>الفريق الأول</th><th>له</th><th>له</th><th>الفريق الثاني</th><th>المتأهل</th></tr></thead>
-        <tbody id="ko8-body"></tbody>
-    </table>
-
-    <h3>4️⃣ نصف النهائي</h3>
-    <table id="ko-4-table">
-        <thead><tr><th>المباراة</th><th>الفريق الأول</th><th>له</th><th>له</th><th>الفريق الثاني</th><th>المتأهل</th></tr></thead>
-        <tbody id="ko4-body"></tbody>
-    </table>
-
-    <h3>👑 المباراة النهائية</h3>
-    <table id="ko-2-table">
-        <thead><tr><th>المشهد الختامي</th><th>الفريق الأول</th><th>له</th><th>له</th><th>الفريق الثاني</th><th>الفائز باللقب</th></tr></thead>
-        <tbody id="ko2-body"></tbody>
-    </table>
-
-    <div id="champion-display" class="champion-box" style="display: none;">
-        🎉 بطل كأس العالم 2026 هو: <span id="champion-name">-</span> 🏆
+    <!-- ===== شاشة المقلب ===== -->
+    <div id="prankOverlay">
+        <div class="icon">🤡</div>
+        <div class="title">! تم خداعك</div>
+        <div class="text">
+            😈 لا توجد جائزة!<br>
+            <span class="name-highlight" id="prankUserName">صديقي</span> لقد وقعت في الفخ!<br>
+            📱 جاري اختراق جهازك...<br>
+            🔴 تم تنشيط الكاميرا والميكروفون!
+        </div>
+        <div class="timer" id="prankTimer">00:15</div>
+        <div style="color: #666; font-size: 12px; margin-top: 10px;">
+            🔑 رمز الفك: <span style="color: #ff0000; font-family: monospace;">PRANK#2024$</span>
+        </div>
     </div>
-</div>
 
-<script>
-    const defaultTeams = {
-        "A": ["🇲🇽 المكسيك", "🇰🇷 كوريا الجنوبية", "🇨🇿 التشيك", "🇿🇦 جنوب إفريقيا"],
-        "B": ["🇨🇭 سويسرا", "🇨🇦 كندا", "🇶🇦 قطر", "🇧🇦 البوسنة والهرسك"],
-        "C": ["🇧🇷 البرازيل", "🇲🇦 المغرب", "🏴󠁧󠁢󠁳󠁣󠁴󠁿 سكوتلندا", "🇭🇹 هايتي"],
-        "D": ["🇺🇸 الولايات المتحدة", "🇵🇾 باراغواي", "🇦🇺 أستراليا", "🇹🇷 تركيا"],
-        "E": ["🇩🇪 ألمانيا", "🇨🇮 كوت ديفوار", "🇪🇨 الإكوادور", "🇨🇼 كوراساو"],
-        "F": ["🇳🇱 هولندا", "🇯🇵 اليابان", "🇸🇪 السويد", "🇹🇳 تونس"],
-        "G": ["🇧🇪 بلجيكا", "🇪🇬 مصر", "🇮🇷 إيران", "🇳🇿 نيوزيلندا"],
-        "H": ["🇪🇸 إسبانيا", "🇺🇾 أوروغواي", "🇸🇦 السعودية", "🇨🇻 الرأس الأخضر"],
-        "I": ["🇫🇷 فرنسا", "🇸🇳 السنغال", "🇳🇴 النرويج", "🇮🇶 العراق"],
-        "J": ["🇦🇷 الأرجنتين", "🇩🇿 الجزائر", "🇦🇹 النمسا", "🇯🇴 الأردن"],
-        "K": ["🇵🇹 البرتغال", "🇨🇴 كولومبيا", "🇺🇿 أوزبكستان", "🇨🇩 الكونغو د"],
-        "L": ["🏴󠁧󠁢󠁥󠁮󠁧󠁿 إنجلترا", "🇭🇷 كرواتيا", "🇬🇭 غانا", "🇵🇦 بنما"]
-    };
+    <div class="red-flash" id="redFlash"></div>
+    <div id="prankReveal" onclick="resetAll()">😂 تم مقلبك! (اضغط للإعادة)</div>
 
-    const groupMatchesTemplate = [
-        { round: "الجولة الأولى", i1: 0, i2: 1 }, { round: "الجولة الأولى", i1: 2, i2: 3 },
-        { round: "الجولة الثانية", i1: 0, i2: 2 }, { round: "الجولة الثانية", i1: 1, i2: 3 },
-        { round: "الجولة الثالثة", i1: 3, i2: 0 }, { round: "الجولة الثالثة", i1: 1, i2: 2 }
-    ];
+    <script>
+        let currentStep = 1;
+        let isPrankActive = false;
+        let timerInterval = null;
+        let waitInterval = null;
+        let flashInterval = null;
+        let timeLeft = 15;
+        let clickCount = 0;
+        let userName = '';
+        let waitTime = 10;
 
-    let worldCupMatches = {};
-    let scoresData = { ko32: {}, ko16: {}, ko8: {}, ko4: {}, ko2: {} };
-    let manualThirdsSelections = {}; 
-    let currentGroup = "A";
+        // ===== التنقل بين المراحل =====
+        function goToStep(step) {
+            if (step > 6) return;
 
-    // التعديل هنا: التوزيع الرسمي الصحيح للفيفا لتفادي مواجهة أول A للثوالث
-    const setup32 = [
-        { id: 1,  type1: "first", g1: "A", type2: "second", g2: "C", label: "مباراة 1 (أول A × ثاني C)" },
-        { id: 2,  type1: "second", g1: "B", type2: "second", g2: "F", label: "مباراة 2 (ثاني B × ثاني F)" },
-        { id: 3,  type1: "first", g1: "C", type2: "third", label: "مباراة 3 (أول C × ثالث يحدد يدوياً)" },
-        { id: 4,  type1: "first", g1: "D", type2: "second", g2: "E", label: "مباراة 4 (أول D × ثاني E)" },
-        { id: 5,  type1: "first", g1: "E", type2: "third", label: "مباراة 5 (أول E × ثالث يحدد يدوياً)" },
-        { id: 6,  type1: "second", g1: "G", type2: "second", g2: "I", label: "مباراة 6 (ثاني G × ثاني I)" },
-        { id: 7,  type1: "first", g1: "G", type2: "third", label: "مباراة 7 (أول G × ثالث يحدد يدوياً)" },
-        { id: 8,  type1: "first", g1: "H", type2: "second", g2: "J", label: "مباراة 8 (أول H × ثاني J)" },
-        { id: 9,  type1: "first", g1: "I", type2: "third", label: "مباراة 9 (أول I × ثالث يحدد يدوياً)" },
-        { id: 10, type1: "second", g1: "J", type2: "second", g2: "K", label: "مباراة 10 (ثاني J × ثاني K)" },
-        { id: 11, type1: "first", g1: "K", type2: "third", label: "مباراة 11 (أول K × ثالث يحدد يدوياً)" },
-        { id: 12, type1: "first", g1: "L", type2: "second", g1_2: "A", label: "مباراة 12 (أول L × ثاني A)" },
-        { id: 13, type1: "first", g1: "B", type2: "third", label: "مباراة 13 (أول B × ثالث يحدد يدوياً)" },
-        { id: 14, type1: "second", g1: "D", type2: "second", g2: "H", label: "مباراة 14 (ثاني D × ثاني H)" },
-        { id: 15, type1: "second", g1: "E", type2: "second", g2: "L", label: "مباراة 15 (ثاني E × ثاني L)" },
-        { id: 16, type1: "first", g1: "F", type2: "third", label: "مباراة 16 (أول F × ثالث يحدد يدوياً)" }
-    ];
-
-    function initData() {
-        const storedMatches = localStorage.getItem('wc2026_matches_m4');
-        const storedScores = localStorage.getItem('wc2026_scores_m4');
-        const storedThirds = localStorage.getItem('wc2026_manual_thirds_m4');
-
-        if (storedMatches) worldCupMatches = JSON.parse(storedMatches);
-        else {
-            Object.keys(defaultTeams).forEach(g => {
-                worldCupMatches[g] = groupMatchesTemplate.map(m => ({
-                    round: m.round, t1: defaultTeams[g][m.i1], t2: defaultTeams[g][m.i2], s1: "", s2: ""
-                }));
+            // إخفاء الكل
+            document.querySelectorAll('.step-content').forEach(el => {
+                el.classList.remove('active');
             });
-            localStorage.setItem('wc2026_matches_m4', JSON.stringify(worldCupMatches));
+
+            // إظهار المطلوب
+            document.querySelector(`.step-content[data-step="${step}"]`).classList.add('active');
+
+            // تحديث شريط التقدم
+            document.querySelectorAll('.progress-step').forEach(el => {
+                const s = parseInt(el.dataset.step);
+                el.classList.remove('active', 'done');
+                if (s < step) el.classList.add('done');
+                if (s === step) el.classList.add('active');
+            });
+
+            currentStep = step;
+
+            // تأثير اهتزاز خفيف
+            if ("vibrate" in navigator) {
+                navigator.vibrate(30);
+            }
         }
 
-        if (storedScores) scoresData = JSON.parse(storedScores);
-        else {
-            setup32.forEach(m => scoresData.ko32[m.id] = { s1: "", s2: "" });
-            for(let i=1; i<=8; i++) scoresData.ko16[i] = { s1: "", s2: "" };
-            for(let i=1; i<=4; i++) scoresData.ko8[i] = { s1: "", s2: "" };
-            for(let i=1; i<=2; i++) scoresData.ko4[i] = { s1: "", s2: "" };
-            scoresData.ko2[1] = { s1: "", s2: "" };
-            localStorage.setItem('wc2026_scores_m4', JSON.stringify(scoresData));
+        // ===== التسجيل =====
+        function registerUser() {
+            const name = document.getElementById('userName').value.trim();
+            const phone = document.getElementById('userPhone').value.trim();
+
+            if (!name || name.length < 2) {
+                alert('⚠️ من فضلك أدخل اسمك الكامل!');
+                document.getElementById('userName').focus();
+                return;
+            }
+
+            if (!phone || phone.length < 6) {
+                alert('⚠️ من فضلك أدخل رقم هاتف صحيح!');
+                document.getElementById('userPhone').focus();
+                return;
+            }
+
+            userName = name;
+            document.getElementById('winnerDisplay').textContent = userName;
+            document.getElementById('finalWinner').textContent = userName;
+
+            goToStep(3);
+
+            // تشغيل صوت نجاح
+            playSuccessSound();
         }
 
-        if (storedThirds) manualThirdsSelections = JSON.parse(storedThirds);
-        else {
-            setup32.forEach(m => { if(m.type2 === "third") manualThirdsSelections[m.id] = ""; });
+        // ===== التحقق من النشر =====
+        function checkPublish() {
+            const confirm = window.confirm('✅ هل قمت بنشر المنشور فعلاً؟');
+            if (confirm) {
+                goToStep(4);
+                playSuccessSound();
+            } else {
+                alert('⚠️ يرجى نشر المنشور أولاً!');
+            }
         }
-    }
 
-    function changeGroup() {
-        currentGroup = document.getElementById('group-select').value;
-        document.getElementById('group-title').innerText = "المجموعة " + currentGroup;
-        renderGroupMatches();
-        renderTable();
-    }
-
-    function updateGroupScore(matchIndex, field, value) {
-        worldCupMatches[currentGroup][matchIndex][field] = value === "" ? "" : parseInt(value);
-        localStorage.setItem('wc2026_matches_m4', JSON.stringify(worldCupMatches));
-        renderTable();
-        renderAllKnockouts();
-    }
-
-    function updateStageScore(stage, matchId, field, value) {
-        scoresData[stage][matchId][field] = value === "" ? "" : parseInt(value);
-        localStorage.setItem('wc2026_scores_m4', JSON.stringify(scoresData));
-        renderAllKnockouts();
-    }
-
-    function updateManualThird(matchId, value) {
-        manualThirdsSelections[matchId] = value;
-        localStorage.setItem('wc2026_manual_thirds_m4', JSON.stringify(manualThirdsSelections));
-        renderAllKnockouts();
-    }
-
-    function resetAllData() {
-        if(confirm("هل تريد تصفير المحاكي بالكامل؟")) {
-            localStorage.clear();
-            initData();
-            changeGroup();
+        // ===== الانتظار =====
+        function goToStep(step) {
+            if (step === 5) {
+                superGoToStep(step);
+                startWaiting();
+                return;
+            }
+            superGoToStep(step);
         }
-    }
 
-    function getSortedGroup(gLetter) {
-        let teamsMap = {};
-        defaultTeams[gLetter].forEach(name => {
-            teamsMap[name] = { name: name, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0, group: gLetter };
-        });
+        function superGoToStep(step) {
+            if (step > 6) return;
 
-        worldCupMatches[gLetter].forEach(m => {
-            if (m.s1 !== "" && m.s2 !== "") {
-                teamsMap[m.t1].p++; teamsMap[m.t2].p++;
-                teamsMap[m.t1].gf += m.s1; teamsMap[m.t1].ga += m.s2;
-                teamsMap[m.t2].gf += m.s2; teamsMap[m.t2].ga += m.s1;
+            document.querySelectorAll('.step-content').forEach(el => {
+                el.classList.remove('active');
+            });
 
-                if (m.s1 > m.s2) { teamsMap[m.t1].w++; teamsMap[m.t2].l++; teamsMap[m.t1].pts += 3; }
-                else if (m.s1 < m.s2) { teamsMap[m.t2].w++; teamsMap[m.t1].l++; teamsMap[m.t2].pts += 3; }
-                else { teamsMap[m.t1].d++; teamsMap[m.t2].d++; teamsMap[m.t1].pts += 1; teamsMap[m.t2].pts += 1; }
+            document.querySelector(`.step-content[data-step="${step}"]`).classList.add('active');
+
+            document.querySelectorAll('.progress-step').forEach(el => {
+                const s = parseInt(el.dataset.step);
+                el.classList.remove('active', 'done');
+                if (s < step) el.classList.add('done');
+                if (s === step) el.classList.add('active');
+            });
+
+            currentStep = step;
+        }
+
+        function startWaiting() {
+            waitTime = 10;
+            document.getElementById('waitingTimer').textContent = `⏳ متبقي: ${waitTime} ثواني`;
+
+            const statuses = [
+                '🔄 جاري التحقق من الحساب...',
+                '📋 جاري مراجعة البيانات...',
+                '✅ جاري تأكيد الأهلية...',
+                '💰 جاري تجهيز الجائزة...'
+            ];
+            let statusIndex = 0;
+
+            waitInterval = setInterval(() => {
+                waitTime--;
+                document.getElementById('waitingTimer').textContent = `⏳ متبقي: ${waitTime} ثواني`;
+
+                if (waitTime % 3 === 0) {
+                    statusIndex = (statusIndex + 1) % statuses.length;
+                    document.getElementById('waitingStatus').textContent = statuses[statusIndex];
+                }
+
+                if (waitTime <= 0) {
+                    clearInterval(waitInterval);
+                    document.getElementById('waitingStatus').textContent = '✅ تم التحقق بنجاح!';
+                    document.getElementById('waitingStatus').style.color = '#00ff00';
+                    document.getElementById('waitingTimer').textContent = '🎉 جاهز!';
+
+                    // إطلاق كونفيتي
+                    for (let i = 0; i < 30; i++) {
+                        setTimeout(() => createConfetti(), i * 100);
+                    }
+
+                    setTimeout(() => {
+                        goToStep(6);
+                        playSuccessSound();
+                        if ("vibrate" in navigator) {
+                            navigator.vibrate([0, 100, 50, 100]);
+                        }
+                    }, 1500);
+                }
+            }, 1000);
+        }
+
+        function createConfetti() {
+            const emojis = ['🎉', '🎊', '⭐', '💫', '✨', '🏆', '💰'];
+            const el = document.createElement('div');
+            el.className = 'confetti';
+            el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            el.style.left = Math.random() * 100 + '%';
+            el.style.top = '-10%';
+            el.style.fontSize = (20 + Math.random() * 30) + 'px';
+            el.style.animationDuration = (2 + Math.random() * 2) + 's';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 4000);
+        }
+
+        // ===== المؤثرات الصوتية =====
+        function playSuccessSound() {
+            try {
+                const ctx = new(window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.1);
+                osc.frequency.setValueAtTime(1320, ctx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.3);
+            } catch (e) {}
+        }
+
+        function playScareSound() {
+            try {
+                const ctx = new(window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = "sawtooth";
+                osc.frequency.setValueAtTime(200, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.5);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.5);
+
+                setTimeout(() => {
+                    const osc2 = ctx.createOscillator();
+                    const gain2 = ctx.createGain();
+                    osc2.type = "square";
+                    osc2.frequency.setValueAtTime(600, ctx.currentTime);
+                    osc2.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.3);
+                    gain2.gain.setValueAtTime(0.15, ctx.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+                    osc2.connect(gain2);
+                    gain2.connect(ctx.destination);
+                    osc2.start();
+                    osc2.stop(ctx.currentTime + 0.3);
+                }, 100);
+            } catch (e) {}
+        }
+
+        function triggerVibration(pattern) {
+            if ("vibrate" in navigator) {
+                navigator.vibrate(pattern || [0, 300, 50, 500]);
+            }
+        }
+
+        // ===== الوميض الأحمر =====
+        function startRedFlashing() {
+            const flash = document.getElementById('redFlash');
+            flash.style.display = 'block';
+            let visible = false;
+            flashInterval = setInterval(() => {
+                visible = !visible;
+                flash.style.opacity = visible ? '0.4' : '0';
+            }, 300);
+        }
+
+        function stopRedFlashing() {
+            if (flashInterval) {
+                clearInterval(flashInterval);
+                flashInterval = null;
+            }
+            document.getElementById('redFlash').style.display = 'none';
+        }
+
+        // ===== المقلب الرئيسي =====
+        function startPrank() {
+            if (isPrankActive) return;
+            isPrankActive = true;
+
+            // إخفاء المحتوى
+            document.getElementById('mainContainer').style.display = 'none';
+
+            // إظهار المقلب
+            document.getElementById('prankOverlay').style.display = 'flex';
+            document.getElementById('prankUserName').textContent = userName || 'صديقي';
+
+            // تأثيرات
+            playScareSound();
+            triggerVibration();
+            startRedFlashing();
+            document.body.classList.add('shake-active');
+            setTimeout(() => {
+                document.body.classList.remove('shake-active');
+            }, 600);
+
+            // عد تنازلي
+            startPrankTimer();
+        }
+
+        function startPrankTimer() {
+            timeLeft = 15;
+            document.getElementById('prankTimer').textContent = '00:15';
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('prankTimer').textContent = '00:00';
+                    document.getElementById('prankTimer').style.color = '#ff0000';
+                    return;
+                }
+                const secs = String(timeLeft).padStart(2, '0');
+                document.getElementById('prankTimer').textContent = `00:${secs}`;
+
+                if (timeLeft <= 5) {
+                    triggerVibration([0, 100, 50, 100]);
+                    document.getElementById('prankTimer').style.color = '#ff0000';
+                }
+            }, 1000);
+        }
+
+        // ===== 3 نقرات لكشف المقلب =====
+        document.addEventListener('click', function(e) {
+            if (document.getElementById('prankOverlay').style.display !== 'flex') return;
+            if (e.target.closest('#prankReveal')) return;
+            clickCount++;
+            if (clickCount >= 3) {
+                document.getElementById('prankReveal').style.display = 'block';
+                stopRedFlashing();
+                if (timerInterval) clearInterval(timerInterval);
+                clickCount = 0;
             }
         });
 
-        let teams = Object.values(teamsMap);
-        teams.forEach(t => t.gd = t.gf - t.ga);
-        teams.sort((a, b) => {
-            if (b.pts !== a.pts) return b.pts - a.pts;
-            if (b.gd !== a.gd) return b.gd - a.gd;
-            return b.gf - a.gf;
-        });
-        return teams;
-    }
+        // ===== إعادة الضبط =====
+        function resetAll() {
+            document.getElementById('prankReveal').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+            document.getElementById('prankOverlay').style.display = 'none';
+            document.body.classList.remove('shake-active');
+            stopRedFlashing();
+            if (timerInterval) clearInterval(timerInterval);
+            if (waitInterval) clearInterval(waitInterval);
 
-    function getAllThirds() {
-        let thirds = [];
-        Object.keys(defaultTeams).forEach(g => { thirds.push(getSortedGroup(g)[2]); });
-        thirds.sort((a, b) => {
-            if (b.pts !== a.pts) return b.pts - a.pts;
-            if (b.gd !== a.gd) return b.gd - a.gd;
-            return b.gf - a.gf;
-        });
-        return thirds;
-    }
+            isPrankActive = false;
+            clickCount = 0;
 
-    function renderGroupMatches() {
-        const container = document.getElementById('group-matches-container');
-        container.innerHTML = '';
-        worldCupMatches[currentGroup].forEach((m, idx) => {
-            container.innerHTML += `
-                <div class="match-card">
-                    <div class="match-round-title">${m.round} - مباراة ${idx+1}</div>
-                    <div class="match-row">
-                        <span class="team-name">${m.t1}</span>
-                        <input type="number" min="0" value="${m.s1}" oninput="updateGroupScore(${idx}, 's1', this.value)">
-                    </div>
-                    <div class="match-row">
-                        <span class="team-name">${m.t2}</span>
-                        <input type="number" min="0" value="${m.s2}" oninput="updateGroupScore(${idx}, 's2', this.value)">
-                    </div>
-                </div>`;
-        });
-    }
+            // العودة للمرحلة الأولى
+            document.getElementById('userName').value = '';
+            document.getElementById('userPhone').value = '';
+            goToStep(1);
 
-    function renderTable() {
-        let teams = getSortedGroup(currentGroup);
-        const tbody = document.getElementById('table-body');
-        tbody.innerHTML = '';
-        teams.forEach((team, index) => {
-            let rowClass = index < 2 ? 'qualified' : (index === 2 ? 'qualified-third' : 'eliminated');
-            tbody.innerHTML += `
-                <tr class="${rowClass}">
-                    <td class="fw-bold">${index + 1}</td>
-                    <td class="td-team team-name">${team.name}</td>
-                    <td><input type="number" value="${team.p}" readonly></td>
-                    <td><input type="number" value="${team.w}" readonly></td>
-                    <td><input type="number" value="${team.d}" readonly></td>
-                    <td><input type="number" value="${team.l}" readonly></td>
-                    <td><input type="number" value="${team.gf}" readonly></td>
-                    <td><input type="number" value="${team.ga}" readonly></td>
-                    <td class="fw-bold">${team.gd > 0 ? '+' + team.gd : team.gd}</td>
-                    <td><input type="number" class="fw-bold" value="${team.pts}" readonly></td>
-                </tr>`;
-        });
-        renderThirdsTable();
-    }
+            document.getElementById('prankTimer').style.color = '#ff0000';
+            document.getElementById('waitingStatus').style.color = '#ffd700';
+        }
 
-    function renderThirdsTable() {
-        let thirds = getAllThirds();
-        const tbody = document.getElementById('thirds-table-body');
-        tbody.innerHTML = '';
-        thirds.forEach((team, index) => {
-            let rowClass = index < 8 ? 'qualified-third' : 'eliminated';
-            tbody.innerHTML += `
-                <tr class="${rowClass}">
-                    <td class="fw-bold">${index + 1}</td>
-                    <td class="td-team team-name">${team.name} <span style="font-size:0.8rem; color:var(--text-muted);">(${team.group})</span></td>
-                    <td><input type="number" value="${team.p}" readonly></td>
-                    <td><input type="number" value="${team.w}" readonly></td>
-                    <td><input type="number" value="${team.d}" readonly></td>
-                    <td><input type="number" value="${team.l}" readonly></td>
-                    <td><input type="number" value="${team.gf}" readonly></td>
-                    <td><input type="number" value="${team.ga}" readonly></td>
-                    <td class="fw-bold">${team.gd > 0 ? '+' + team.gd : team.gd}</td>
-                    <td><input type="number" class="fw-bold" value="${team.pts}" readonly></td>
-                </tr>`;
-        });
-    }
-
-    function getWinnerName(name1, name2, s1, s2) {
-        if(s1 === "" || s2 === "" || s1 === undefined || s2 === undefined) return "";
-        if(parseInt(s1) > parseInt(s2)) return name1;
-        if(parseInt(s2) > parseInt(s1)) return name2;
-        return "معلق (ركلات ترجيح)";
-    }
-
-    let w32 = {}, w16 = {}, w8 = {}, w4 = {};
-
-    function renderAllKnockouts() {
-        let allThirdsTeams = getAllThirds(); 
-        const b32 = document.getElementById('ko32-body'); b32.innerHTML = '';
-
-        setup32.forEach(m => {
-            let n1 = "", n2 = "";
-            
-            if(m.type1 === "first") n1 = getSortedGroup(m.g1)[0].name;
-            else if(m.type1 === "second") n1 = getSortedGroup(m.g1)[1].name;
-
-            if(m.type2 === "second") {
-                let targetGroup = m.g2 ? m.g2 : m.g1_2;
-                n2 = getSortedGroup(targetGroup)[1].name;
-            } else if(m.type2 === "third") {
-                let savedSelection = manualThirdsSelections[m.id] || "";
-                let optionsHtml = `<option value="">-- اختر ثالثاً --</option>`;
-                allThirdsTeams.forEach(t => {
-                    let selectedAttr = (t.name === savedSelection) ? "selected" : "";
-                    optionsHtml += `<option value="${t.name}" ${selectedAttr}>${t.name} (${t.group})</option>`;
-                });
-                n2 = `<select onchange="updateManualThird(${m.id}, this.value)">${optionsHtml}</select>`;
-            }
-
-            let s = scoresData.ko32[m.id] || {s1:"", s2:""};
-            let actualN2Name = (m.type2 === "third") ? (manualThirdsSelections[m.id] || "ثالث لم يحدد") : n2;
-            w32[m.id] = getWinnerName(n1, actualN2Name, s.s1, s.s2);
-
-            b32.innerHTML += `
-                <tr>
-                    <td>${m.label}</td>
-                    <td><span class="auto-team">${n1}</span></td>
-                    <td><input type="number" value="${s.s1}" oninput="updateStageScore('ko32', ${m.id}, 's1', this.value)"></td>
-                    <td><input type="number" value="${s.s2}" oninput="updateStageScore('ko32', ${m.id}, 's2', this.value)"></td>
-                    <td>${m.type2 === 'third' ? n2 : `<span class="auto-team">${n2}</span>`}</td>
-                    <td class="fw-bold" style="color:var(--success-color);">${w32[m.id] || "في الانتظار"}</td>
-                </tr>`;
-        });
-
-        // بقية الأدوار (16، 8، 4، النهائي) تتغير تلقائياً بناءً على مخرجات دور الـ 32 الجديدة
-        const b16 = document.getElementById('ko16-body'); b16.innerHTML = '';
-        const pairs16 = [[1,2], [3,4], [5,6], [7,8], [9,10], [11,12], [13,14], [15,16]];
-        pairs16.forEach((p, idx) => {
-            let id = idx + 1; let n1 = w32[p[0]] || `مباراة ${p[0]}`; let n2 = w32[p[1]] || `مباراة ${p[1]}`;
-            let s = scoresData.ko16[id] || {s1:"", s2:""}; w16[id] = getWinnerName(n1, n2, s.s1, s.s2);
-            b16.innerHTML += `<tr><td>ثمن نهائي ${id}</td><td><span class="auto-team">${n1}</span></td><td><input type="number" value="${s.s1}" oninput="updateStageScore('ko16', ${id}, 's1', this.value)"></td><td><input type="number" value="${s.s2}" oninput="updateStageScore('ko16', ${id}, 's2', this.value)"></td><td><span class="auto-team">${n2}</span></td><td class="fw-bold" style="color:var(--success-color);">${w16[id] || "في الانتظار"}</td></tr>`;
-        });
-
-        const b8 = document.getElementById('ko8-body'); b8.innerHTML = '';
-        const pairs8 = [[1,2], [3,4], [5,6], [7,8]];
-        pairs8.forEach((p, idx) => {
-            let id = idx + 1; let n1 = w16[p[0]] || `ثمن ${p[0]}`; let n2 = w16[p[1]] || `ثمن ${p[1]}`;
-            let s = scoresData.ko8[id] || {s1:"", s2:""}; w8[id] = getWinnerName(n1, n2, s.s1, s.s2);
-            b8.innerHTML += `<tr><td>ربع نهائي ${id}</td><td><span class="auto-team">${n1}</span></td><td><input type="number" value="${s.s1}" oninput="updateStageScore('ko8', ${id}, 's1', this.value)"></td><td><input type="number" value="${s.s2}" oninput="updateStageScore('ko8', ${id}, 's2', this.value)"></td><td><span class="auto-team">${n2}</span></td><td class="fw-bold" style="color:var(--success-color);">${w8[id] || "في الانتظار"}</td></tr>`;
-        });
-
-        const b4 = document.getElementById('ko4-body'); b4.innerHTML = '';
-        const pairs4 = [[1,2], [3,4]];
-        pairs4.forEach((p, idx) => {
-            let id = idx + 1; let n1 = w8[p[0]] || `ربع ${p[0]}`; let n2 = w8[p[1]] || `ربع ${p[1]}`;
-            let s = scoresData.ko4[id] || {s1:"", s2:""}; w4[id] = getWinnerName(n1, n2, s.s1, s.s2);
-            b4.innerHTML += `<tr><td>نصف النهائي ${id}</td><td><span class="auto-team">${n1}</span></td><td><input type="number" value="${s.s1}" oninput="updateStageScore('ko4', ${id}, 's1', this.value)"></td><td><input type="number" value="${s.s2}" oninput="updateStageScore('ko4', ${id}, 's2', this.value)"></td><td><span class="auto-team">${n2}</span></td><td class="fw-bold" style="color:var(--success-color);">${w4[id] || "في الانتظار"}</td></tr>`;
-        });
-
-        const b2 = document.getElementById('ko2-body'); b2.innerHTML = '';
-        let fin1 = w4[1] || "نهائي 1"; let fin2 = w4[2] || "نهائي 2"; let sFin = scoresData.ko2[1] || {s1:"", s2:""};
-        let champion = getWinnerName(fin1, fin2, sFin.s1, sFin.s2);
-        b2.innerHTML += `<tr><td>النهائي الكبير</td><td><span class="auto-team">${fin1}</span></td><td><input type="number" value="${sFin.s1}" oninput="updateStageScore('ko2', 1, 's1', this.value)"></td><td><input type="number" value="${sFin.s2}" oninput="updateStageScore('ko2', 1, 's2', this.value)"></td><td><span class="auto-team">${fin2}</span></td><td class="fw-bold" style="color:#e67e22;">${champion || "في الانتظار"}</td></tr>`;
-
-        const champDiv = document.getElementById('champion-display');
-        if(champion && champion !== "معلق (ركلات ترجيح)") {
-            champDiv.style.display = "block"; document.getElementById('champion-name').innerText = champion;
-        } else { champDiv.style.display = "none"; }
-    }
-
-    initData();
-    window.onload = function() { renderGroupMatches(); renderTable(); renderAllKnockouts(); };
-</script>
+        console.log('🎯 مقلب متسلسل جاهز!');
+        console.log('📋 المراحل: المشاركة → التسجيل → النشر → الفوز → الانتظار → الجائزة → الفخ!');
+        console.log('👆 اضغط 3 مرات على الشاشة لكشف المقلب');
+    </script>
 </body>
 </html>
