@@ -30,7 +30,7 @@ HTML5
 JavaScript
 PWA (Progressive Web App)
 🚀 كيفية التثبيت والاستخدام
-قم بزيارة الرابط التالي من متصفح هاتفك: [(https://samialngar1989-glitch.github.io/Talip-allah/)]
+قم بزيارة الرابط التالي من متصفح هاتفك: [([https://samialngar1989-glitch.github.io/Talip-allah/](https://samialngar1989-glitch.github.io/FIFA-2026/))]
 في متصفح كروم (أو سفاري)، اضغط على خيارات المتصفح (الثلاث نقاط).
 اختر "إضافة إلى الشاشة الرئيسية" (Add to Home Screen).
 سيظهر التطبيق كأيقونة على هاتفك ويمكنك استخدامه كأي تطبيق آخر.
